@@ -40,6 +40,9 @@ def load_data(path: str):
 
 df = load_data(uploaded_file)
 
+# Print column names for debugging
+st.write("Columnas del DataFrame:", df.columns)
+
 with st.expander("Data Preview"):
     st.dataframe(df)
 
@@ -208,26 +211,13 @@ def plot_average_sales_by_model(view_mode):
             labels={"AverageSales": "Average Sales (MXN)"},
             height=400,
             color_discrete_sequence=color_palette
-        )
-    else:
-        avg_sales_data = duckdb.query("""
-            SELECT Auto AS Model, COUNT(*) / COUNT(DISTINCT Fecha Factura) AS AverageUnitsSold
-            FROM df
-            GROUP BY Model
-            ORDER BY AverageUnitsSold DESC
-        """).df()
-
-        fig = px.bar(
-            avg_sales_data,
-            x="Model",
-            y="AverageUnitsSold",
-            title="Average Units Sold by Model",
-            labels={"AverageUnitsSold": "Average Units Sold"},
-            height=400,
-            color_discrete_sequence=color_palette
+            
         )
 
-    st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, use_container_width=True)
+    
+
+    
 
 def plot_cost_vs_sale(view_mode):
     if view_mode == "Monetary":
